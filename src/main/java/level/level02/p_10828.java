@@ -56,6 +56,8 @@ public class p_10828 {
 }
 
 /**
+ * 직접 구현하는 것과 stack을 사용하는 것 메모리, 시간 차이 없음.
+ *
  * [1] 스택 직접 구현
  * static int[] arr = new int[10001];
  * static int last = 0;   // 가장 위에 있는 값을 확인하기 위함
