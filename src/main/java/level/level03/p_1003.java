@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+// 이차원 DP 사용
 public class p_1003 {
     static Integer dp[][] = new Integer[41][2];
 
