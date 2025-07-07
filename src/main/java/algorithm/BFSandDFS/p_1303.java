@@ -6,75 +6,61 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class p_1303 {
-    static String[][] board;
-    static int[][] checkboard;
-    static int N, M;
-    static int[] dx = {1, 0, -1, 0};
-    static int[] dy = {0, -1, 0, 1};
-    static int result_w;
-    static int result_b;
-    static int cnt_w;
-    static int cnt_b;
+    private static int[] dx = {1, 0, -1, 0};
+    private static int[] dy = {0, -1, 0, 1};
 
+    private static void Sol(String[][] board, boolean[][] visit, int M, int N) {
+        int white = 0;
+        int blue = 0;
 
-    static int DFS_W(int x, int y, String board[][]) {
-        for (int i = 0; i < 4; i++) {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                if (!visit[i][j]) {
+                    String color = board[i][j]; // 색 저장
+                    int tmp = DFS(board, visit, M, N, i, j, color);
+                    int result = tmp * tmp;
 
-            if (nx >= 0 && nx < N && ny >= 0 && ny < M && board[nx][ny].equals("W") && checkboard[nx][ny] == 0) {
-                checkboard[nx][ny] = 1;
-                cnt_w += 1;
-                DFS_W(nx, ny, board);
+                    if (color.equals("W")) {
+                        white += result;
+                    } else {
+                        blue += result;
+                    }
+                }
             }
         }
-        return cnt_w;
+        System.out.println(white + " " + blue);
     }
 
-    static int DFS_B(int x, int y, String board[][]) {
+    private static int DFS(String[][] board, boolean[][] visit, int M, int N, int x, int y, String color) {
+        int size = 1; // 자기 자신
+        visit[x][y] = true;
+
         for (int i = 0; i < 4; i++) {
             int nx = x + dx[i];
             int ny = y + dy[i];
 
-            if (nx >= 0 && nx < N && ny >= 0 && ny < M && board[nx][ny].equals("B") && checkboard[nx][ny] == 0) {
-                checkboard[nx][ny] = 1;
-                cnt_b += 1;
-                DFS_B(nx, ny, board);
+            if (nx >= 0 && nx < M && ny >= 0 && ny < N && board[nx][ny].equals(color) && !visit[nx][ny]) {
+                size += DFS(board, visit, M, N, nx, ny, color);
             }
         }
-        return cnt_b;
+        return size;
     }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        M = Integer.parseInt(st.nextToken());
-        N = Integer.parseInt(st.nextToken());
-        board = new String[N][M];
-        checkboard = new int[N][M];
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+        String board[][] = new String[M][N];
+        boolean visit[][] = new boolean[M][N];
 
-        for (int i = 0; i < N; i++) {
-            String line = br.readLine();
-            for (int j = 0; j < M; j++) {
-                board[i][j] = String.valueOf(line.charAt(j));
+        for (int i = 0; i < M; i++) {
+            String s = br.readLine();
+            for (int j = 0; j < N; j++) {
+                board[i][j] = String.valueOf(s.charAt(j));
             }
         }
-
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if (board[i][j].equals("W")&&checkboard[i][j]==0) {
-                    cnt_w = 1;
-                    checkboard[i][j]=1;
-                    result_w += (DFS_W(i, j, board) * DFS_W(i, j, board));
-                }
-                if (board[i][j].equals("B")&&checkboard[i][j]==0) {
-                    cnt_b = 1;
-                    checkboard[i][j]=1;
-                    result_b += (DFS_B(i, j, board) * DFS_B(i, j, board));
-                }
-            }
-        }
-        System.out.println(result_w + " " + result_b);
+        Sol(board, visit, M, N);
     }
 }
