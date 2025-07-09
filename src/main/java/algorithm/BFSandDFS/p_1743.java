@@ -6,53 +6,59 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class p_1743 {
-    static int[][] graph;
-    static int N, M;
-    static int[] dx = {1, 0, -1, 0};
-    static int[] dy = {0, -1, 0, 1};
-    static int cnt = 0;
+    private static int[] dx = {1, 0, -1, 0};
+    private static int[] dy = {0, -1, 0, 1};
 
-    static int DFS(int x, int y, int[][] graph) {
-        graph[x][y] = 0;
-        cnt += 1;
-        for (int i = 0; i < 4; i++) {
-            int cx = x + dx[i];
-            int cy = y + dy[i];
+    private static void Sol(int[][] board, boolean[][] visit, int N, int M) {
+        int result = 0;
+        int tmp = 0;
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= M; j++) {
+                if (board[i][j] == 1 && !visit[i][j]) {
+                    tmp = DFS(board, visit, N, M, i, j);
+                }
+                if (result < tmp) {
+                    result = tmp;
+                }
+            }
+        }
+        System.out.println(result);
+    }
 
-            if (cx >= 0 && cx <= N && cy >= 0 && cy <= M && graph[cx][cy] == 1) {
-                DFS(cx, cy, graph);
+    private static int DFS(int[][] board, boolean[][] visit, int N, int M, int i, int j) {
+        int cnt = 1;
+        visit[i][j] = true;
+
+        for (int k = 0; k < 4; k++) {
+            int cx = i + dx[k];
+            int cy = j + dy[k];
+
+            if (cx >= 1 && cx <= N && cy >= 1 && cy <= M && board[cx][cy] == 1 && !visit[cx][cy]) {
+                cnt += DFS(board, visit, N, M, cx, cy);
             }
         }
         return cnt;
     }
 
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
 
-        int result = 0;
+        int[][] board = new int[N + 1][M + 1];
+        boolean[][] visit = new boolean[N + 1][M + 1];
 
-        graph = new int[N + 1][M + 1];
         for (int i = 0; i < K; i++) {
             st = new StringTokenizer(br.readLine());
-            int x = Integer.parseInt(st.nextToken());
-            int y = Integer.parseInt(st.nextToken());
-
-            graph[x][y] = 1;
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            board[a][b] = 1;
         }
 
-        for (int i = 0; i <= N; i++) {
-            for (int j = 0; j <= M; j++) {
-                cnt = 0;
-                if (graph[i][j] == 1) {
-                    result = Math.max(result, DFS(i, j, graph));
-                }
-            }
-        }
-        System.out.println(result);
+        Sol(board, visit, N, M);
     }
 }
