@@ -6,18 +6,24 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class p_2606 {
-    static int A, B;
-    static int board[][];
-    static boolean check[];
+    private static void Sol(int[][] board, boolean[] visit, int N) {
+        int result = 0;
+        visit[1] = true;
+        for (int i = 1; i <= N; i++) {
+            if (board[1][i] == 1 && !visit[i]) {
+                result += DFS(board, visit, N, i);
+            }
+        }
+        System.out.println(result);
+    }
 
-    static int cnt;
+    private static int DFS(int[][] board, boolean[] visit, int N, int i) {
+        visit[i] = true;
+        int cnt = 1;
 
-    static int DFS(int v) {
-        cnt += 1;
-        check[v] = true;
-        for (int i = 1; i <= A; i++) {
-            if (board[v][i] == 1 && !check[i]) {
-                DFS(i);
+        for (int k = 0; k <= N; k++) {
+            if (board[i][k] == 1 && !visit[k]) {
+                cnt += DFS(board, visit, N, k);
             }
         }
         return cnt;
@@ -27,19 +33,18 @@ public class p_2606 {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        A = Integer.parseInt(br.readLine());
-        B = Integer.parseInt(br.readLine());
+        int N = Integer.parseInt(br.readLine());
+        int M = Integer.parseInt(br.readLine());
+        int[][] board = new int[N + 1][N + 1];
+        boolean[] visit = new boolean[N + 1];
 
-        board = new int[A + 1][A + 1];
-        check = new boolean[A + 1];
-
-        for (int i = 0; i < B; i++) {
+        for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
-            int x = Integer.parseInt(st.nextToken());
-            int y = Integer.parseInt(st.nextToken());
-
-            board[x][y] = board[y][x] = 1;
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            board[a][b] = board[b][a] = 1;
         }
-        System.out.println(DFS(1) - 1);
+
+        Sol(board, visit, N);
     }
 }
