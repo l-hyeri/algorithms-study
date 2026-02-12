@@ -1,7 +1,5 @@
 package level.level02;
 
-import level.Main;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
