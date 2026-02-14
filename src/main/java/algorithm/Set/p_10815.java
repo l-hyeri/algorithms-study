@@ -1,4 +1,4 @@
-package algorithm.Map;
+package algorithm.Set;
 
 import java.util.*;
 import java.io.*;
